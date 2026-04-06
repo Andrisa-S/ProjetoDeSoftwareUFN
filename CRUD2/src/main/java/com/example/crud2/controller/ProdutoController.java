@@ -2,22 +2,23 @@ package com.example.crud2.controller;
 
 import com.example.crud2.model.Produto;
 import com.example.crud2.repository.ProdutoRepository;
+import com.example.crud2.service.ProdutoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/produto")
 public class ProdutoController {
     private final ProdutoRepository produtoRepository;
+    private final ProdutoService produtoService;
 
-    public ProdutoController(ProdutoRepository produtoRepository) {
+    public ProdutoController(ProdutoRepository produtoRepository, ProdutoService produtoService) {
         this.produtoRepository = produtoRepository;
+        this.produtoService = produtoService;
     }
 
     @GetMapping("/formulario")
@@ -28,7 +29,7 @@ public class ProdutoController {
 
     @PostMapping("/salvar")
     public String salvarProduto(@ModelAttribute Produto produto) {
-        produtoRepository.save(produto);
+        produtoService.salvar(produto);
         return "redirect:/produto/listar";
     }
 
@@ -37,5 +38,18 @@ public class ProdutoController {
         List<Produto> produtos = produtoRepository.findAll();
         model.addAttribute("produtos", produtos);
         return "lista";
+    }
+
+    @GetMapping("/deletar/{id}")
+    public String deletarProduto(@PathVariable Integer id) {
+        produtoRepository.deleteById(id);
+        return "redirect:/produto/listar";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editarProduto(@PathVariable Integer id, Model model) {
+        Optional<Produto> produto = produtoRepository.findById(id);
+        model.addAttribute("produto", produto);
+        return "formulario";
     }
 }
