@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário</title>
+</head>
+<body>
+    <h1>Cadastro de Categoria</h1>
+    <form method="POST" th:action="@{/categoria/salvar}" th:object="${categoria}">
+        <input type="hidden" th:field="*{id}">
+        <label>Nome:</label><br>
+        <input type="text" name="nome" th:field="*{nome}"><br>
+    </form>
+</body>
+</html>

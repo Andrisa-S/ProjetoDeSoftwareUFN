@@ -4,6 +4,9 @@ import com.example.crud2.model.Produto;
 import com.example.crud2.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ProdutoService {
     private final ProdutoRepository produtoRepository;
@@ -20,5 +23,17 @@ public class ProdutoService {
             throw new RuntimeException("O valor deve ser maior que zero.");
         }
         produtoRepository.save(produto);
+    }
+
+    public List<Produto> listarTodos() {
+        return produtoRepository.findAll();
+    }
+
+    public Optional<Produto> buscarPorId(Integer id) {
+        return produtoRepository.findById(id);
+    }
+
+    public void deletar(Integer id) {
+        produtoRepository.deleteById(id);
     }
 }

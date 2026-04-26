@@ -14,6 +14,18 @@ public class Produto {
     private int quantidade;
     private String imagem;
 
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")  // nome da coluna FK no banco
+    private Categoria categoria;
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
     public String getImagem() {
         return imagem;
     }
@@ -62,21 +74,23 @@ public class Produto {
         this.id = id;
     }
 
-    public Produto(int id, String nome, String descricao, double valor, int quantidade, String imagem) {
+    public Produto(int id, String nome, String descricao, double valor, int quantidade, String imagem, Categoria categoria) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.valor = valor;
         this.quantidade = quantidade;
         this.imagem = imagem;
+        this.categoria = categoria;
     }
 
-    public Produto(String nome, String descricao, double valor, int quantidade, String imagem) {
+    public Produto(String nome, String descricao, double valor, int quantidade, String imagem, Categoria categoria) {
         this.nome = nome;
         this.descricao = descricao;
         this.valor = valor;
         this.quantidade = quantidade;
         this.imagem = imagem;
+        this.categoria = categoria;
     }
 
     public Produto() {
@@ -92,6 +106,7 @@ public class Produto {
                 ", valor=" + valor +
                 ", quantidade=" + quantidade +
                 ", imagem='" + imagem + '\'' +
+                ", categoria=" + categoria +
                 '}';
     }
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista</title>
+</head>
+<body>
+    <h1>Lista</h1>
+    <table class="table table-bordered" border="1">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nome</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="categoria : ${categorias}">
+                <td th:text="${categoria.id}"></td>
+                <td th:text="${categoria.nome}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/categoria/formulario">Nova Categoria</a>
+</body>
+</html>

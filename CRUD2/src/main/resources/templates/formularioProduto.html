@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h1 class="mb-4">Cadastro de Produto</h1>
+    <form method="POST" th:action="@{/produto/salvar}" th:object="${produto}">
+        <input type="hidden" th:field="*{id}">
+        <label>Nome:</label><br>
+        <input type="text" name="nome" th:field="*{nome}"><br>
+        <label>Descrição:</label><br>
+        <input type="text" name="descricao" th:field="*{descricao}"><br>
+        <label>Valor:</label><br>
+        <input type="number" name="valor" step="0.01" th:field="*{valor}"><br>
+        <label>Quantidade:</label><br>
+        <input type="number" name="quantidade" th:field="*{quantidade}"><br>
+        <label>Categoria:</label><br>
+        <select name="categoriaId" class="form-select" required>
+            <option value="">Selecione uma categoria</option>
+            <option th:each="cat : ${categorias}"
+                    th:value="${cat.id}"
+                    th:text="${cat.nome}"
+                    th:selected="${produto.categoria != null and produto.categoria.id == cat.id}">
+            </option>
+        </select>
+        <label>Imagem:</label><br>
+        <input type="text" name="imagem" th:field="*{imagem}"><br><br>
+        <input type="reset" value="Limpar">
+        <input type="submit" value="Cadastrar">
+    </form>
+</body>
+</html>

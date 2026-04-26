@@ -1,6 +1,8 @@
 package com.example.crud2.controller;
 
+import com.example.crud2.model.Categoria;
 import com.example.crud2.model.Produto;
+import com.example.crud2.repository.CategoriaRepository;
 import com.example.crud2.repository.ProdutoRepository;
 import com.example.crud2.service.ProdutoService;
 import org.springframework.stereotype.Controller;
@@ -15,20 +17,27 @@ import java.util.Optional;
 public class ProdutoController {
     private final ProdutoRepository produtoRepository;
     private final ProdutoService produtoService;
+    private final CategoriaRepository categoriaRepository;
 
-    public ProdutoController(ProdutoRepository produtoRepository, ProdutoService produtoService) {
+    public ProdutoController(ProdutoRepository produtoRepository, ProdutoService produtoService, CategoriaRepository categoriaRepository) {
         this.produtoRepository = produtoRepository;
         this.produtoService = produtoService;
+        this.categoriaRepository = categoriaRepository;
     }
 
     @GetMapping("/formulario")
     public String exibirFormulario(Model model) {
         model.addAttribute("produto", new Produto());
-        return "formulario";
+        List<Categoria> categorias = categoriaRepository.findAll();
+        model.addAttribute("categorias", categorias);
+        return "formularioProduto";
     }
 
     @PostMapping("/salvar")
-    public String salvarProduto(@ModelAttribute Produto produto) {
+    public String salvarProduto(@ModelAttribute Produto produto, @RequestParam("Categoria Id") Integer categoriaId) {
+        Categoria categoria = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new IllegalArgumentException("Categoria inválida"));
+        produto.setCategoria(categoria);
         produtoService.salvar(produto);
         return "redirect:/produto/listar";
     }
@@ -37,7 +46,7 @@ public class ProdutoController {
     public String listarProdutos(Model model) {
         List<Produto> produtos = produtoRepository.findAll();
         model.addAttribute("produtos", produtos);
-        return "lista";
+        return "listaProduto";
     }
 
     @GetMapping("/deletar/{id}")
@@ -48,8 +57,11 @@ public class ProdutoController {
 
     @GetMapping("/editar/{id}")
     public String editarProduto(@PathVariable Integer id, Model model) {
-        Optional<Produto> produto = produtoRepository.findById(id);
+        Produto produto = produtoService.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produto inválido"));
         model.addAttribute("produto", produto);
-        return "formulario";
+        List<Categoria> categorias = categoriaRepository.findAll();
+        model.addAttribute("categorias", categorias);
+        return "formularioProduto";
     }
 }
